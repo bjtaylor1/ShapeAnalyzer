@@ -25,9 +25,9 @@ public:
 #endif
 	
 	static fs::path cacheroot;
-	static int getclimbing(const vector<latlong>& latlongs);
-	static int getclimbing(const vector<coord>& coords);
-	static int getclimbing(const set<contour>& contours, const vector<coord>& coords);
+	static int getmaxpercentage(const vector<latlong>& latlongs);
+	static int getmaxpercentage(const vector<coord>& coords);
+	static int getmaxpercentage(const set<contour>& contours, const vector<coord>& coords);
 	static fs::path getcachefilename(PCOORD start, PCOORD end);
 	static bool get_line_intersection(PCOORD tStart, PCOORD tEnd, PCOORD cStart, PCOORD cEnd, float* tProportion);
 	static bool trygetcachedvalues(const string& cachefilename, vector<int>& crosses);
