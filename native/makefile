@@ -10,12 +10,12 @@ OBJS=$(CPPSRCS:.cpp=.o)
 ALLOBJS=$(ALLCPPSRCS:.cpp=.o)
 TESTOBJS=$(filter-out hdsrv.o,$(ALLOBJS))
 
-LDFLAGS=-g /usr/local/lib/libproj.a -lboost_thread -lboost_system -lboost_filesystem -lboost_regex
+LDFLAGS=-lboost_thread -lboost_system -lboost_filesystem -lboost_regex -shared
 TESTLDFLAGS=-pthread $$PUGIXML_ROOT/build/make-g++-debug-standard/src/pugixml.cpp.o 
 
-CXXFLAGS=$(EXTRACXXFLAGS) -Wall -pedantic -O4
+CXXFLAGS=$(EXTRACXXFLAGS) -Wall -pedantic -O4 -I$$JAVA_HOME/include -I$$JAVA_HOME/include/linux -fPIC
 TESTCXXFLAGS=-pthread -I $$GTEST_ROOT -I$$GTEST_ROOT/include -I$$PUGIXML_ROOT
-MAINBIN=bin/hdsrv
+MAINBIN=bin/com_bjt_ShapeAnalyzer_App.so
 TESTBIN=bin/tests
 
 all : $(MAINBIN)

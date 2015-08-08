@@ -4,15 +4,16 @@ import org.postgresql.PGConnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.io.File;
 
-/**
- * Hello world!
- *
- */
 public class App 
 {
     public static void main( String[] args ) {
         try {
+            final String curdir = System.getProperty("user.dir");
+            final File libFile = new File(curdir, "com_bjt_ShapeAnalyzer_App.so");
+						System.load(libFile.getAbsolutePath());
+
             int[] latlongs = new int[]{};
             int maxPercentage = getmaxpercentage(latlongs);
             System.out.println(String.format("The result is %d", maxPercentage));

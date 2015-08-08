@@ -1,6 +1,9 @@
 args.o: args.cpp args.h
 	$(CXX) $(CXXFLAGS) -c args.cpp
 
+com_bjt_ShapeAnalyzer_App.o: com_bjt_ShapeAnalyzer_App.cpp  com_bjt_ShapeAnalyzer_App.h
+	$(CXX) $(CXXFLAGS) -c com_bjt_ShapeAnalyzer_App.cpp
+
 contour.o: contour.cpp contour.h coord.h iteratorpair.h utils.h
 	$(CXX) $(CXXFLAGS) -c contour.cpp
 
