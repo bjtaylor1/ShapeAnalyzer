@@ -46,9 +46,6 @@ gridfiledeterminer.o: gridfiledeterminer.cpp gridfiledeterminer.h coord.h  args.
 gridfilesetdeterminer.o: gridfilesetdeterminer.cpp  gridfilesetdeterminer.h gridfiledeterminer.h coord.h args.h
 	$(CXX) $(CXXFLAGS) -c gridfilesetdeterminer.cpp
 
-hdsrv.o: hdsrv.cpp args.h processor.h
-	$(CXX) $(CXXFLAGS) -c hdsrv.cpp
-
 hdsrvexception.o: hdsrvexception.cpp hdsrvexception.h
 	$(CXX) $(CXXFLAGS) -c hdsrvexception.cpp
 
