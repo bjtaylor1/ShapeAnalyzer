@@ -1,19 +1,16 @@
-ALLCPPSRCS=$(wildcard *.cpp)
-TESTCPPSRCS=$(wildcard *test.cpp)
-CPPSRCS=$(filter-out $(TESTCPPSRCS),$(ALLCPPSRCS))
+CPPSRCS=$(wildcard *.cpp)
+CSRCS=$(wildcard *.c)
 
-ALLHSRCS=$(wildcard *.h)
-TESTHSRCS=$(wildcard *test.h)
-HSRCS=$(filter-out $(TESTHSRCS),$(ALLHSRCS))
+HSRCS=$(wildcard *.h)
 
 OBJS=$(CPPSRCS:.cpp=.o)
-ALLOBJS=$(ALLCPPSRCS:.cpp=.o)
-TESTOBJS=$(filter-out hdsrv.o,$(ALLOBJS))
+COBJS=$(CSRCS:.c=.o)
 
 LDFLAGS=-lboost_thread -lboost_system -lboost_filesystem -lboost_regex -shared
 TESTLDFLAGS=-pthread $$PUGIXML_ROOT/build/make-g++-debug-standard/src/pugixml.cpp.o 
 
 CXXFLAGS=$(EXTRACXXFLAGS) -Wall -pedantic -O4 -I$$JAVA_HOME/include -I$$JAVA_HOME/include/linux -fPIC
+CFLAGS=$(EXTRACFLAGS) -O4 -fPIC -DHAVE_CONFIG_H -I. -DPROJ_LIB=\"/usr/local/share/proj\" -DMUTEX_pthread
 TESTCXXFLAGS=-pthread -I $$GTEST_ROOT -I$$GTEST_ROOT/include -I$$PUGIXML_ROOT
 MAINBIN=bin/com_bjt_ShapeAnalyzer_App.so
 TESTBIN=bin/tests
@@ -33,24 +30,17 @@ sources.d: $(CPPSRCS) $(HSRCS) makefile
 	$(CXX) -MM $(CPPSRCS) | sed ':x; /\\$$/ { N; s/\\\n//; tx }' | sed -r -e 's/^(.*)\.o:(.*)$$/\1.o:\2\n\t$$(CXX) $$(CXXFLAGS) -c \1.cpp\n/'>sources.d
 #                         ^ combines line continuations                ^ inserts compile command after line 
 
-tests.d: $(TESTCPPSRCS) $(TESTHSRCS) makefile
-	$(CXX) -MM $(TESTCPPSRCS) | sed ':x; /\\$$/ { N; s/\\\n//; tx }' | sed -r -e 's/^(.*)\.o:(.*)$$/\1.o:\2\n\t$$(CXX) $$(CXXFLAGS) $$(TESTCXXFLAGS) -c \1.cpp\n/'>tests.d
-
+csources.d: $(CSRCS) $(HSRCS) makefile
+	$(CXX) -MM $(CSRCS) | sed ':x; /\\$$/ { N; s/\\\n//; tx }' | sed -r -e 's/^(.*)\.o:(.*)$$/\1.o:\2\n\t$$(CXX) $$(CFLAGS) -c \1.c\n/'>csources.d
+#                         ^ combines line continuations                ^ inserts compile command after line 
 
 -include sources.d
+-include csources.d
 
--include tests.d
-
-$(MAINBIN) : sources.d $(OBJS) makefile bin
-	$(CXX) $(OBJS) $(LDFLAGS) -o $(MAINBIN)
-
-$(TESTBIN) : tests.d $(TESTOBJS) makefile bin
-	$(CXX) $(TESTOBJS) $$GTEST_ROOT/src/gtest-all.o $(LDFLAGS) $(TESTLDFLAGS) -o $(TESTBIN)
+$(MAINBIN) : sources.d csources.d $(OBJS) makefile bin
+	$(CXX) $(OBJS) $(COBJS) $(LDFLAGS) -o $(MAINBIN)
 
 printvars : 
 	@echo CPPSRCS=$(CPPSRCS)
-	@echo ALLCPPSRCS=$(ALLCPPSRCS)
-	@echo TESTCPPSRCS=$(TESTCPPSRCS)
-	@echo TESTOBJS=$(TESTOBJS)
 
 always:
