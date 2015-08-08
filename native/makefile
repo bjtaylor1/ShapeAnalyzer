@@ -17,9 +17,6 @@ TESTBIN=bin/tests
 
 all : $(MAINBIN)
 
-test : $(TESTBIN) 
-	$(TESTBIN) -d ~/terr50_cgml_gb -p 48879
-	
 bin : 
 	mkdir -p bin
 
@@ -37,7 +34,7 @@ csources.d: $(CSRCS) $(HSRCS) makefile
 -include sources.d
 -include csources.d
 
-$(MAINBIN) : sources.d csources.d $(OBJS) makefile bin
+$(MAINBIN) : sources.d csources.d $(OBJS) $(COBJS) makefile bin
 	$(CXX) $(OBJS) $(COBJS) $(LDFLAGS) -o $(MAINBIN)
 
 printvars : 
