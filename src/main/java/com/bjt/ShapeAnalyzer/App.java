@@ -27,4 +27,6 @@ public class App
             System.exit(1);
         }
     }
+
+    public static native int getmaxpercentage(int[] latLongs);
 }
