@@ -14,10 +14,10 @@ public class App
             final File libFile = new File(curdir, "com_bjt_ShapeAnalyzer_App.so");
 						System.load(libFile.getAbsolutePath());
 
-            int[] latlongs = new int[]{};
+            double[] latlongs = new double[]{120,162};
             int maxPercentage = getmaxpercentage(latlongs);
             System.out.println(String.format("The result is %d", maxPercentage));
-            
+/*            
             Class.forName("org.postgresql.Driver");
             String connStr = "jdbc:postgresql://192.168.1.23:5432/junctions";
             System.out.println("Connecting...");
@@ -27,11 +27,12 @@ public class App
                 final PGConnection pgConnection = (PGConnection) connection;
                 pgConnection.addDataType("geometry", Class.forName("org.postgis.PGgeometry"));
             }
+*/
         }catch(Exception e) {
             e.printStackTrace(System.err);
             System.exit(1);
         }
     }
 
-    public static native int getmaxpercentage(int[] latLongs);
+    public static native int getmaxpercentage(double[] latLongs);
 }

@@ -1,7 +1,7 @@
 args.o: args.cpp args.h
 	$(CXX) $(CXXFLAGS) -c args.cpp
 
-com_bjt_ShapeAnalyzer_App.o: com_bjt_ShapeAnalyzer_App.cpp  com_bjt_ShapeAnalyzer_App.h
+com_bjt_ShapeAnalyzer_App.o: com_bjt_ShapeAnalyzer_App.cpp  com_bjt_ShapeAnalyzer_App.h coord.h latlong.h crossfinder.h contour.h  cross.h
 	$(CXX) $(CXXFLAGS) -c com_bjt_ShapeAnalyzer_App.cpp
 
 contour.o: contour.cpp contour.h coord.h iteratorpair.h utils.h
@@ -57,9 +57,6 @@ latlong.o: latlong.cpp latlong.h
 
 latlongreader.o: latlongreader.cpp latlongreader.h latlong.h
 	$(CXX) $(CXXFLAGS) -c latlongreader.cpp
-
-processor.o: processor.cpp processor.h coordconverter.h coord.h latlong.h  gridfiledeterminer.h crossfinder.h contour.h cross.h iteratorpair.h  args.h
-	$(CXX) $(CXXFLAGS) -c processor.cpp
 
 socketwrapper.o: socketwrapper.cpp
 	$(CXX) $(CXXFLAGS) -c socketwrapper.cpp
