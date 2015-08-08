@@ -13,6 +13,10 @@ public class App
 {
     public static void main( String[] args ) {
         try {
+            int[] latlongs = new int[]{};
+            int maxPercentage = getmaxpercentage(latlongs);
+            System.out.println(String.format("The result is %d", maxPercentage));
+            
             Class.forName("org.postgresql.Driver");
             String connStr = "jdbc:postgresql://192.168.1.23:5432/junctions";
             System.out.println("Connecting...");
