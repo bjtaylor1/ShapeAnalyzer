@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<gpx xmlns:wptx1="http://www.garmin.com/xmlschemas/WaypointExtension/v1" xmlns:gpxedw="http://www.gpxeditor.co.uk/xmlschemas/WaypointExtension/v1" xmlns:gpxedts="http://www.gpxeditor.co.uk/xmlschemas/TrackSegExtension/v1" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3" creator="GPXEditor" version="1.1" xmlns="http://www.topografix.com/GPX/1/1">
+  <trk>
+    <name>SouthClifton</name>
+    <extensions>
+      <gpxx:TrackExtension>
+        <gpxx:DisplayColor>Black</gpxx:DisplayColor>
+      </gpxx:TrackExtension>
+    </extensions>
+    <trkseg>
+      <trkpt lat="53.22333" lon="-0.75939" />
+      <trkpt lat="53.22333" lon="-0.7594" />
+      <trkpt lat="53.22283" lon="-0.75934" />
+      <trkpt lat="53.22228" lon="-0.75919" />
+      <trkpt lat="53.22069" lon="-0.75847" />
+      <trkpt lat="53.21957" lon="-0.75794" />
+      <trkpt lat="53.2179" lon="-0.75692" />
+      <trkpt lat="53.21738" lon="-0.75668" />
+      <trkpt lat="53.21699" lon="-0.75659" />
+      <trkpt lat="53.21646" lon="-0.75659" />
+      <trkpt lat="53.21552" lon="-0.75678" />
+      <trkpt lat="53.21423" lon="-0.75721" />
+      <trkpt lat="53.21349" lon="-0.75742" />
+      <trkpt lat="53.21273" lon="-0.75766" />
+      <trkpt lat="53.21252" lon="-0.75767" />
+      <trkpt lat="53.21192" lon="-0.75772" />
+      <trkpt lat="53.2106" lon="-0.7577" />
+      <trkpt lat="53.21022" lon="-0.75777" />
+      <trkpt lat="53.20994" lon="-0.75796" />
+      <trkpt lat="53.2097" lon="-0.75817" />
+      <trkpt lat="53.20897" lon="-0.75898" />
+      <trkpt lat="53.20866" lon="-0.75927" />
+      <trkpt lat="53.20838" lon="-0.75946" />
+      <trkpt lat="53.20784" lon="-0.75972" />
+      <trkpt lat="53.20716" lon="-0.76" />
+      <trkpt lat="53.20517" lon="-0.76081" />
+      <trkpt lat="53.20318" lon="-0.76166" />
+      <trkpt lat="53.20267" lon="-0.76184" />
+      <trkpt lat="53.20267" lon="-0.76183" />
+    </trkseg>
+  </trk>
+</gpx>
