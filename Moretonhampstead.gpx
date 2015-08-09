@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<gpx xmlns:wptx1="http://www.garmin.com/xmlschemas/WaypointExtension/v1" xmlns:gpxedw="http://www.gpxeditor.co.uk/xmlschemas/WaypointExtension/v1" xmlns:gpxedts="http://www.gpxeditor.co.uk/xmlschemas/TrackSegExtension/v1" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3" creator="GPXEditor" version="1.1" xmlns="http://www.topografix.com/GPX/1/1">
+  <trk>
+    <name>Moretonhampstead</name>
+    <extensions>
+      <gpxx:TrackExtension>
+        <gpxx:DisplayColor>Black</gpxx:DisplayColor>
+      </gpxx:TrackExtension>
+    </extensions>
+    <trkseg>
+      <trkpt lat="50.66372" lon="-3.76895" />
+      <trkpt lat="50.66374" lon="-3.76892" />
+      <trkpt lat="50.66383" lon="-3.76911" />
+      <trkpt lat="50.6641" lon="-3.76985" />
+      <trkpt lat="50.66417" lon="-3.76978" />
+      <trkpt lat="50.66426" lon="-3.7698" />
+      <trkpt lat="50.66478" lon="-3.77007" />
+      <trkpt lat="50.66561" lon="-3.76985" />
+      <trkpt lat="50.66687" lon="-3.76967" />
+      <trkpt lat="50.66785" lon="-3.76954" />
+      <trkpt lat="50.66874" lon="-3.7695" />
+      <trkpt lat="50.66892" lon="-3.76942" />
+      <trkpt lat="50.66941" lon="-3.76906" />
+      <trkpt lat="50.66997" lon="-3.76895" />
+      <trkpt lat="50.6707" lon="-3.76882" />
+      <trkpt lat="50.67171" lon="-3.76864" />
+      <trkpt lat="50.67282" lon="-3.76839" />
+      <trkpt lat="50.67377" lon="-3.76817" />
+      <trkpt lat="50.6748" lon="-3.76789" />
+      <trkpt lat="50.67549" lon="-3.76774" />
+      <trkpt lat="50.67568" lon="-3.76744" />
+      <trkpt lat="50.67604" lon="-3.76686" />
+      <trkpt lat="50.67625" lon="-3.76644" />
+      <trkpt lat="50.67648" lon="-3.76597" />
+      <trkpt lat="50.67646" lon="-3.76521" />
+      <trkpt lat="50.67634" lon="-3.76522" />
+    </trkseg>
+  </trk>
+</gpx>
