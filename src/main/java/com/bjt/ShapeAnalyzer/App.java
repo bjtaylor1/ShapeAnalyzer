@@ -23,7 +23,7 @@ public class App
 	public static void main( String[] args ) {
 		try {
 			//loadLib("com_bjt_ShapeAnalyzer_App.so");
-			Double[] latlongs = readLatLongsFromGpxFile(new File(args[0]));
+			double[] latlongs = readLatLongsFromGpxFile(new File(args[0]));
 			double maxPercentage = getmaxpercentage(latlongs);
 			System.out.println(String.format("The result is %.6f", maxPercentage));
 			/*            
@@ -43,7 +43,7 @@ public class App
 		}
 	}
 
-	private static Double[] readLatLongsFromGpxFile(File file) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
+	private static double[] readLatLongsFromGpxFile(File file) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
 		final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 		final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		final Document document = documentBuilder.parse(file);
@@ -51,16 +51,16 @@ public class App
 		final XPath xPath = xPathFactory.newXPath();
 		final XPathExpression xPathExpression = xPath.compile("gpx/trk/trkseg/trkpt");
 		final NodeList nodes = (NodeList) xPathExpression.evaluate(document, XPathConstants.NODESET);
-		final List<Double> doubles = new ArrayList<>();
+		final double[] doubles = new double[nodes.getLength() * 2];
 		for(int i = 0; i < nodes.getLength(); i++) {
 			final Node node = nodes.item(i);
 			final NamedNodeMap attributes = node.getAttributes();
-			Double lat = Double.parseDouble(attributes.getNamedItem("lat").getNodeValue());
-			Double lon = Double.parseDouble(attributes.getNamedItem("lon").getNodeValue());
-			doubles.add(lat);
-			doubles.add(lon);
+			double lat = Double.parseDouble(attributes.getNamedItem("lat").getNodeValue());
+			double lon = Double.parseDouble(attributes.getNamedItem("lon").getNodeValue());
+			doubles[i*2] = lat;
+			doubles[i*2+1] = lon;
 		}
-		return doubles.toArray(new Double[]{});
+		return doubles;
 	}
 
 	private static void loadLib(final String lib) {
@@ -69,5 +69,5 @@ public class App
 		System.load(libFile.getAbsolutePath());
 	}
 
-	public static native double getmaxpercentage(Double[] latLongs);
+	public static native double getmaxpercentage(double[] latLongs);
 }
