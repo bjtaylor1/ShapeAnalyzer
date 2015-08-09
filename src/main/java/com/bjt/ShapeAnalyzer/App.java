@@ -43,7 +43,7 @@ public class App
 	public static void main( String[] args ) {
 		try {
 
-			//loadLib("com_bjt_ShapeAnalyzer_App.so");
+			loadLib("com_bjt_ShapeAnalyzer_App.so");
 /*
 			double[] latlongs = readLatLongsFromGpxFile(new File(args[0]));
 			double maxPercentage = getmaxpercentage(latlongs);
@@ -117,7 +117,7 @@ public class App
 					writeQueue.put(SteepnessInfo.End());
 					return;
 				}
-				double maxPercentage = getmaxpercentage_test(roadInfo.getLatLongs());
+				double maxPercentage = getmaxpercentage(roadInfo.getLatLongs());
 				countProcessed.incrementAndGet();
 				final SteepnessInfo steepnessInfo = new SteepnessInfo(roadInfo.getOsmId(), maxPercentage);
 				writeQueue.put(steepnessInfo);
