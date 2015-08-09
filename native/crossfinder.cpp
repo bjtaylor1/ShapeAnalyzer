@@ -20,11 +20,13 @@ double crossfinder::getmaxpercentage(const vector<latlong>& latlongs)
 {
 	vector<coord> coords;
 	coordconverter::convert(latlongs, coords);
+/*
 	cout << "got " << coords.size() << " coords" << endl;
 	for(vector<coord>::const_iterator it = coords.begin(); it != coords.end(); it++)
 	{
 		cout << " coord: " << it->getEDouble() << "," << it->getNDouble() << endl;
 	}
+*/
 	return getmaxpercentage(coords);
 }
 
@@ -69,7 +71,7 @@ double crossfinder::getmaxpercentage(const set<contour>& contours, const vector<
 					double deltan = coord_it.end->getNDouble() - coord_it.start->getNDouble();
 					double e = coord_it.start->getEDouble() + (tProportion * deltae);
 					double n = coord_it.start->getNDouble() + (tProportion * deltan);
-					cout << pointnum << ": " << tProportion << " along " << (*(coord_it.start)) << " to " << (*(coord_it.end)) << " = " << e << "," << n << endl;
+	//				cout << pointnum << ": " << tProportion << " along " << (*(coord_it.start)) << " to " << (*(coord_it.end)) << " = " << e << "," << n << endl;
 					crossinfo cross(contour_it->height, e, n, pointnum + tProportion);//tProportion should always be 0-1, add (int) pointnum gives overall proportion
 					crossinfos.push_back(cross);
 				}
@@ -88,7 +90,7 @@ double crossfinder::getmaxpercentage(const set<contour>& contours, const vector<
 		double dist = sqrt(pow(deltan,2) + pow(deltae,2));
 		double heightdiff = abs(it.end->height - it.start->height);
 		double percentage = heightdiff/dist;
-		cout << "rises/falls " << heightdiff << " in " << dist << "m from " << it.start->e<< "," <<it.start->n << " to " << it.end->e << "," << it.end->n << " = " << percentage << endl;
+//		cout << "rises/falls " << heightdiff << " in " << dist << "m from " << it.start->e<< "," <<it.start->n << " to " << it.end->e << "," << it.end->n << " = " << percentage << endl;
 		if(percentage > maxpercentage) maxpercentage = percentage;
 	}
 	
