@@ -60,6 +60,7 @@ public class App
 
 			reportthread.interrupt();
 			reportthread.join(3000);
+			writeReport();
 
 		}catch(Exception e) {
 			e.printStackTrace(System.err);
@@ -171,11 +172,15 @@ public class App
 		try {
 			while (!Thread.interrupted()) {
 				Thread.sleep(2000);
-				System.out.print(String.format("\rRead: %d, processed %d, written %d",
-						countRead.get(), countProcessed.get(), countWritten.get()));
+				writeReport();
 			}
 		}catch(InterruptedException e) {
 		}
+	}
+
+	private static void writeReport() {
+		System.out.print(String.format("\rRead: %d, processed %d, written %d",
+				countRead.get(), countProcessed.get(), countWritten.get()));
 	}
 
 	private static double[] readLatLongsFromGpxFile(File file) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
