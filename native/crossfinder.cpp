@@ -42,19 +42,18 @@ double crossfinder::getmaxpercentage(const vector<coord>& coords)
 
 double crossfinder::getmaxpercentage(const set<contour>& contours, const vector<coord>& coords)
 {
-	vector<int> crosses;
 	gridcontourpruner gcp;
 
 	//loop through coords
-	double maxpercentage = 0;
+	int pointnum = -1;
+	vector<crossinfo> crossinfos;
 	for(iteratorpair<vector<coord>::const_iterator> coord_it = coords.begin(); coord_it.neitherIs(coords.end()); coord_it.increment())
 	{
+		++pointnum;
 		coordset trackdelta(coord_it.start, coord_it.end, false);
 		set<contour> relevantcontours = gcp.prunecontours(trackdelta, contours);
 
 		//loop through contours
-		double maxheight = LONG_MIN;
-		double minheight =  LONG_MAX;
 		for(set<contour>::const_iterator contour_it = relevantcontours.begin(); contour_it != relevantcontours.end(); contour_it++)
 		{
 
@@ -66,29 +65,33 @@ double crossfinder::getmaxpercentage(const set<contour>& contours, const vector<
 				float tProportion;
 				if(get_line_intersection(coord_it.start, coord_it.end, contour_coord_it.start, contour_coord_it.end, &tProportion))
 				{
-					int height = contour_it->height;
-					if(height > maxheight) maxheight = height;
-					if(height < minheight) minheight = height;
+					double deltae = coord_it.end->getEDouble() - coord_it.start->getEDouble();
+					double deltan = coord_it.end->getNDouble() - coord_it.start->getNDouble();
+					double e = coord_it.start->getEDouble() + (tProportion * deltae);
+					double n = coord_it.start->getNDouble() + (tProportion * deltan);
+					cout << pointnum << ": " << tProportion << " along " << (*(coord_it.start)) << " to " << (*(coord_it.end)) << " = " << e << "," << n << endl;
+					crossinfo cross(contour_it->height, e, n, pointnum + tProportion);//tProportion should always be 0-1, add (int) pointnum gives overall proportion
+					crossinfos.push_back(cross);
 				}
 			}	
 
 		}
 
-		double deltax = coord_it.start->getEDouble() - coord_it.end->getEDouble();
-		double deltay = coord_it.start->getNDouble() - coord_it.end->getNDouble();
-		double dist = sqrt(pow(deltax,2) + pow(deltay,2));
-		double percentage = 0;
-		if(maxheight != INT_MAX && minheight != INT_MAX)
-		{
-			percentage = abs (maxheight - minheight) / dist;
-		}
-		if(percentage > maxpercentage)
-		{
-			maxpercentage = percentage;
-		}
-
 	}	
 
+	sort(crossinfos.begin(), crossinfos.end());
+	double maxpercentage = 0;
+	for(iteratorpair<vector<crossinfo>::iterator> it = crossinfos.begin(); it.neitherIs(crossinfos.end()); it.increment())
+	{
+		double deltae = it.end->e - it.start->e;
+		double deltan = it.end->n - it.start->n;
+		double dist = sqrt(pow(deltan,2) + pow(deltae,2));
+		double heightdiff = abs(it.end->height - it.start->height);
+		double percentage = heightdiff/dist;
+		cout << "rises/falls " << heightdiff << " in " << dist << "m from " << it.start->e<< "," <<it.start->n << " to " << it.end->e << "," << it.end->n << " = " << percentage << endl;
+		if(percentage > maxpercentage) maxpercentage = percentage;
+	}
+	
 	return maxpercentage;
 }
 

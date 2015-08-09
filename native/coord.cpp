@@ -33,7 +33,7 @@ coord::coord(int _e, int _n) : e(_e * 10), n(_n * 10){}
 
 ostream& operator<<(ostream& os, const coord& c)
 {
-  os << "e=" << c.e << ",n=" << c.n;
+  os << c.e << "," << c.n;
   return os;
 }
 
@@ -47,5 +47,6 @@ bool operator<(const coord& lhs, const coord& rhs)
 {
   return lhs.getcomparator() < rhs.getcomparator();
 }
+
 
 coord::~coord(){}
