@@ -1,4 +1,7 @@
 *.class
+*.o
+*.lo
+*.so
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
