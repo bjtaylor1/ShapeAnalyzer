@@ -10,9 +10,9 @@ extern "C" {
 /*
  * Class:     com_bjt_ShapeAnalyzer_App
  * Method:    getmaxpercentage
- * Signature: ([D)I
+ * Signature: ([D)D
  */
-JNIEXPORT jint JNICALL Java_com_bjt_ShapeAnalyzer_App_getmaxpercentage
+JNIEXPORT jdouble JNICALL Java_com_bjt_ShapeAnalyzer_App_getmaxpercentage
   (JNIEnv *, jclass, jdoubleArray);
 
 #ifdef __cplusplus

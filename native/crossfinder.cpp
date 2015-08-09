@@ -16,36 +16,37 @@ namespace fs = boost::filesystem;
 
 fs::path crossfinder::cacheroot("cache");
 
-int crossfinder::getmaxpercentage(const vector<latlong>& latlongs)
+double crossfinder::getmaxpercentage(const vector<latlong>& latlongs)
 {
 	vector<coord> coords;
 	coordconverter::convert(latlongs, coords);
+	cout << "got " << coords.size() << " coords" << endl;
+	for(vector<coord>::const_iterator it = coords.begin(); it != coords.end(); it++)
+	{
+		cout << " coord: " << it->getEDouble() << "," << it->getNDouble() << endl;
+	}
 	return getmaxpercentage(coords);
 }
 
-int crossfinder::getmaxpercentage(const vector<coord>& coords)
+double crossfinder::getmaxpercentage(const vector<coord>& coords)
 {
 	contourloader cl;
 	set<contour> contours;
 	coordset cs(coords);
 	cl.loadandprune(cs, contours);
 
-	for(vector<coord>::const_iterator c_it = coords.begin(); c_it != coords.end(); c_it++)
-	{
-
-	}
-	int climbing = getmaxpercentage(contours, coords);
-	return climbing;
+	double maxpercentage = getmaxpercentage(contours, coords);
+	return maxpercentage;
 }
 
 
-int crossfinder::getmaxpercentage(const set<contour>& contours, const vector<coord>& coords)
+double crossfinder::getmaxpercentage(const set<contour>& contours, const vector<coord>& coords)
 {
 	vector<int> crosses;
 	gridcontourpruner gcp;
 
 	//loop through coords
-	int maxpercentage = 0;
+	double maxpercentage = 0;
 	for(iteratorpair<vector<coord>::const_iterator> coord_it = coords.begin(); coord_it.neitherIs(coords.end()); coord_it.increment())
 	{
 		coordset trackdelta(coord_it.start, coord_it.end, false);
@@ -72,13 +73,14 @@ int crossfinder::getmaxpercentage(const set<contour>& contours, const vector<coo
 			}	
 
 		}
+
 		double deltax = coord_it.start->getEDouble() - coord_it.end->getEDouble();
 		double deltay = coord_it.start->getNDouble() - coord_it.end->getNDouble();
 		double dist = sqrt(pow(deltax,2) + pow(deltay,2));
 		double percentage = 0;
 		if(maxheight != INT_MAX && minheight != INT_MAX)
 		{
-			percentage = (maxheight - minheight) / dist;
+			percentage = abs (maxheight - minheight) / dist;
 		}
 		if(percentage > maxpercentage)
 		{
@@ -87,7 +89,7 @@ int crossfinder::getmaxpercentage(const set<contour>& contours, const vector<coo
 
 	}	
 
-	return (int)floor(maxpercentage);
+	return maxpercentage;
 }
 
 bool crossfinder::get_line_intersection(PCOORD tStart, PCOORD tEnd, PCOORD cStart, PCOORD cEnd, float* tProportion)

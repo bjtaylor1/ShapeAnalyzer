@@ -42,9 +42,7 @@ void contourloader::prunecontours(const coordset& coords, set<contour>& contours
 void contourloader::loadandprune(const coordset& coords, set<contour>& contours) const
 {
 	loadcontours(coords, contours);
-	if(args::verbose.getValue()) cout << "loaded contours" << endl;
 	prunecontours(coords, contours);
-	if(args::verbose.getValue()) cout << "pruned contours" << endl;
 }
 
 void contourloader::loadcontours(const set<string>& files, set<contour>& contours) const
@@ -59,7 +57,6 @@ void contourloader::loadcontours(const set<string>& files, set<contour>& contour
 		if(!file.is_open()) throw hdsrvexception("could not open file " + filePath.string());
 		int numContours;
 		file.read((char*)&numContours, sizeof(int));
-		if(args::verbose.getValue()) cout << "Reading " << numContours << " contours from " << filePath << endl;
 		for(int i = 0; i < numContours; i++)
 		{
 			const contour c(file);

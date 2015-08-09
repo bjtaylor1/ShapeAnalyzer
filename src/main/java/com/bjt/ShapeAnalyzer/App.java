@@ -13,9 +13,9 @@ public class App
 			loadLib("com_bjt_ShapeAnalyzer_App.so");
 			loadLib("libproj.so");
 
-			double[] latlongs = new double[]{53.2, -0.75,    53.2, -0.6};
-			int maxPercentage = getmaxpercentage(latlongs);
-			System.out.println(String.format("The result is %d", maxPercentage));
+			double[] latlongs = new double[]{53.231787, -1.455071,   53.238069, -1.558337 };
+			double maxPercentage = getmaxpercentage(latlongs);
+			System.out.println(String.format("The result is %.6f", maxPercentage));
 			/*            
 										Class.forName("org.postgresql.Driver");
 										String connStr = "jdbc:postgresql://192.168.1.23:5432/junctions";
@@ -39,5 +39,5 @@ public class App
 		System.load(libFile.getAbsolutePath());
 	}
 
-	public static native int getmaxpercentage(double[] latLongs);
+	public static native double getmaxpercentage(double[] latLongs);
 }

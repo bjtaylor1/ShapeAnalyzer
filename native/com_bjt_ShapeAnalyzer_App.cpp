@@ -6,7 +6,7 @@
 
 using namespace std;
 
-JNIEXPORT jint JNICALL Java_com_bjt_ShapeAnalyzer_App_getmaxpercentage
+JNIEXPORT jdouble JNICALL Java_com_bjt_ShapeAnalyzer_App_getmaxpercentage
   (JNIEnv * env, jclass theclass, jdoubleArray thearray)
 {
 	jsize size = env->GetArrayLength(thearray);
