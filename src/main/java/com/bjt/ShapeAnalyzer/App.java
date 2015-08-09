@@ -15,11 +15,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.*;
 import java.io.File;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -30,7 +27,6 @@ public class App
 	private static AtomicInteger countRead = new AtomicInteger(0);
 	private static AtomicInteger countProcessed = new AtomicInteger(0);
 	private static AtomicInteger countWritten = new AtomicInteger(0);
-	private static AtomicBoolean allRead = new AtomicBoolean(false);
 
 	private static LinkedBlockingQueue<RoadInfo> processingQueue = new LinkedBlockingQueue<>(10000); //read from DB, ready to process
 	private static LinkedBlockingQueue<SteepnessInfo> writeQueue = new LinkedBlockingQueue<>(10000); //processed, ready to write back to DB
@@ -76,9 +72,11 @@ public class App
 				System.out.println("READ: Connected to postgres.");
 				final PGConnection pgConnection = (PGConnection) connection;
 				pgConnection.addDataType("geometry", Class.forName("org.postgis.PGgeometry"));
-				final PreparedStatement preparedStatement = connection.prepareStatement(
-						"select osm_id, ST_Transform(geometry, 4326) as geometry from osm_roads limit 10");
-				try(final ResultSet resultSet = preparedStatement.executeQuery()) {
+				connection.setAutoCommit(false);
+				final Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+				statement.setFetchSize(1000);
+				try(final ResultSet resultSet = statement.executeQuery(
+						"select osm_id, ST_Transform(geometry, 4326) as geometry from osm_roads")) {
 					while (resultSet.next()) {
 						if (Thread.interrupted()) {
 							System.out.println("READ: ending by request");
