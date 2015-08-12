@@ -10,6 +10,7 @@
 #include "coordconverter.h"
 #include <cmath>
 #include <climits>
+#include <numeric>
 
 using namespace std;
 namespace fs = boost::filesystem;
@@ -20,13 +21,15 @@ double crossfinder::getmaxpercentage(const vector<latlong>& latlongs)
 {
 	vector<coord> coords;
 	coordconverter::convert(latlongs, coords);
-/*
-	cout << "got " << coords.size() << " coords" << endl;
-	for(vector<coord>::const_iterator it = coords.begin(); it != coords.end(); it++)
-	{
-		cout << " coord: " << it->getEDouble() << "," << it->getNDouble() << endl;
+	string v(getenv("VERBOSITY"));
+	if(v == "V")
+	{	
+		cout << "got " << coords.size() << " coords" << endl;
+		for(vector<coord>::const_iterator it = coords.begin(); it != coords.end(); it++)
+		{
+			cout << " coord: " << it->getEDouble() << "," << it->getNDouble() << endl;
+		}
 	}
-*/
 	return getmaxpercentage(coords);
 }
 
@@ -45,7 +48,8 @@ double crossfinder::getmaxpercentage(const vector<coord>& coords)
 double crossfinder::getmaxpercentage(const set<contour>& contours, const vector<coord>& coords)
 {
 	gridcontourpruner gcp;
-
+	string v(getenv("VERBOSITY"));
+	bool isverbose = (v == "V");
 	//loop through coords
 	int pointnum = -1;
 	vector<crossinfo> crossinfos;
@@ -71,7 +75,7 @@ double crossfinder::getmaxpercentage(const set<contour>& contours, const vector<
 					double deltan = coord_it.end->getNDouble() - coord_it.start->getNDouble();
 					double e = coord_it.start->getEDouble() + (tProportion * deltae);
 					double n = coord_it.start->getNDouble() + (tProportion * deltan);
-	//				cout << pointnum << ": " << tProportion << " along " << (*(coord_it.start)) << " to " << (*(coord_it.end)) << " = " << e << "," << n << endl;
+					if(isverbose)	cout << pointnum << ": " << tProportion << " along " << (*(coord_it.start)) << " to " << (*(coord_it.end)) << " = " << e << "," << n << endl;
 					crossinfo cross(contour_it->height, e, n, pointnum + tProportion);//tProportion should always be 0-1, add (int) pointnum gives overall proportion
 					crossinfos.push_back(cross);
 				}
@@ -82,7 +86,7 @@ double crossfinder::getmaxpercentage(const set<contour>& contours, const vector<
 	}	
 
 	sort(crossinfos.begin(), crossinfos.end());
-	double maxpercentage = 0;
+	vector<double> percentages;
 	for(iteratorpair<vector<crossinfo>::iterator> it = crossinfos.begin(); it.neitherIs(crossinfos.end()); it.increment())
 	{
 		double deltae = it.end->e - it.start->e;
@@ -90,10 +94,32 @@ double crossfinder::getmaxpercentage(const set<contour>& contours, const vector<
 		double dist = sqrt(pow(deltan,2) + pow(deltae,2));
 		double heightdiff = abs(it.end->height - it.start->height);
 		double percentage = heightdiff/dist;
-//		cout << "rises/falls " << heightdiff << " in " << dist << "m from " << it.start->e<< "," <<it.start->n << " to " << it.end->e << "," << it.end->n << " = " << percentage << endl;
-		if(percentage > maxpercentage) maxpercentage = percentage;
+		if(isverbose) cout << "rises/falls " << heightdiff << " in " << dist << "m from " << it.start->e<< "," <<it.start->n << " to " << it.end->e << "," << it.end->n << " = " << percentage << endl;
+		if(percentage > 0) percentages.push_back(percentage);
 	}
-	
+	sort(percentages.begin(), percentages.end());
+	reverse(percentages.begin(), percentages.end());
+	if(percentages.size() > 5) percentages.resize(5);
+	double maxpercentage = 0;
+	if(percentages.size() >= 5)
+	{
+		if(isverbose)
+		{
+			cout << "top 5: " ;
+			for(vector<double>::const_iterator it = percentages.begin(); it != percentages.end(); it++)
+			{
+				cout << (*it) << "  ";
+			}
+			cout << endl;
+		}
+		maxpercentage = accumulate(percentages.begin(), percentages.end(), 0.0) / percentages.size();
+	}
+	else
+	{
+		if(isverbose) cout << "not significant enough a sample" << endl;
+	}
+
+	if(isverbose) cout << endl << "maxpercentage = " << maxpercentage;
 	return maxpercentage;
 }
 

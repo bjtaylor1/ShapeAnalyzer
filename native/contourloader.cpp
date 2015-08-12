@@ -54,13 +54,15 @@ void contourloader::loadcontours(const set<string>& files, set<contour>& contour
 		fs::path fileName( (*i) + ".gml.dat");
 		fs::path filePath = baseDir / fileName;
 		ifstream file(filePath.string().c_str());
-		if(!file.is_open()) throw hdsrvexception("could not open file " + filePath.string());
-		int numContours;
-		file.read((char*)&numContours, sizeof(int));
-		for(int i = 0; i < numContours; i++)
-		{
-			const contour c(file);
-			contours.insert(c);
+		if(file.is_open()) //don't do anyting for ways (e.g. isle of man, ireland, france? etc) that have no contours
+		{ 
+			int numContours;
+			file.read((char*)&numContours, sizeof(int));
+			for(int i = 0; i < numContours; i++)
+			{
+				const contour c(file);
+				contours.insert(c);
+			}
 		}
 	}
 }

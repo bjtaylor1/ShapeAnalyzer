@@ -19,11 +19,6 @@ class crossfinder
 {
 public:
 
-#ifdef TESTING
-	static xml_node svgnode;
-	static svgset svgs;
-#endif
-	
 	static fs::path cacheroot;
 	static double getmaxpercentage(const vector<latlong>& latlongs);
 	static double getmaxpercentage(const vector<coord>& coords);

@@ -33,7 +33,7 @@ coord::coord(int _e, int _n) : e(_e * 10), n(_n * 10){}
 
 ostream& operator<<(ostream& os, const coord& c)
 {
-  os << c.e << "," << c.n;
+  os << c.getEDouble() << "," << c.getNDouble();
   return os;
 }
 

@@ -1,3 +1,6 @@
+*.cache
+*.osm.pbf
+*.cache
 run.log
 *.*~
 *.exp

@@ -28,14 +28,16 @@ public class App
 	private static AtomicInteger countProcessed = new AtomicInteger(0);
 	private static AtomicInteger countWritten = new AtomicInteger(0);
 
-	private static LinkedBlockingQueue<RoadInfo> processingQueue = new LinkedBlockingQueue<>(10000); //read from DB, ready to process
-	private static LinkedBlockingQueue<SteepnessInfo> writeQueue = new LinkedBlockingQueue<>(10000); //processed, ready to write back to DB
+	private static LinkedBlockingQueue<RoadInfo> processingQueue = new LinkedBlockingQueue<>(1000); //read from DB, ready to process
+	private static LinkedBlockingQueue<SteepnessInfo> writeQueue = new LinkedBlockingQueue<>(); //processed, ready to write back to DB
 
 	private static Thread readThread = new Thread(() -> {		read();});
 	private static Thread processThread =new Thread(() -> {process();});
 	private static Thread writeThread = new Thread(() -> write());
 	private static Thread reportthread = new Thread(() -> report());
 
+	private static final String wayfilter = System.getenv("WAYFILTER");
+	private static final boolean wayfilterDefined = (wayfilter != null && !wayfilter.equals(""));
 	public static void main( String[] args ) {
 		try {
 
@@ -46,13 +48,14 @@ public class App
 			System.out.println(String.format("The result is %.6f", maxPercentage));
 */
 			readThread.start();
-			processThread.start();
-			writeThread.start();
+			processThread.start();			
+			if(!wayfilterDefined)	writeThread.start();
+
 			reportthread.start();
 
 			readThread.join();
 			processThread.join();
-			writeThread.join();
+			if(!wayfilterDefined) writeThread.join();
 
 			reportthread.interrupt();
 			reportthread.join(3000);
@@ -64,10 +67,10 @@ public class App
 		}
 	}
 
+	final static String connStr = "jdbc:postgresql://192.168.1.23:5432/" + System.getenv("OSMDB");
 	public static void read() {
 		try {
 			Class.forName("org.postgresql.Driver");
-			String connStr = "jdbc:postgresql://192.168.1.23:5432/osm";
 			try (final Connection connection = DriverManager.getConnection(connStr, "osm", "osm")) {
 				System.out.println("READ: Connected to postgres.");
 				final PGConnection pgConnection = (PGConnection) connection;
@@ -75,8 +78,11 @@ public class App
 				connection.setAutoCommit(false);
 				final Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 				statement.setFetchSize(1000);
-				try(final ResultSet resultSet = statement.executeQuery(
-						"select osm_id, ST_Transform(geometry, 4326) as geometry from osm_roads")) {
+				String query = "select osm_id, ST_Transform(geometry, 4326) as geometry from osm_roads ";
+				if(wayfilterDefined) {
+					query += " WHERE osm_id = '" + wayfilter + "'";
+				}
+				try(final ResultSet resultSet = statement.executeQuery(query)) {
 					while (resultSet.next()) {
 						if (Thread.interrupted()) {
 							System.out.println("READ: ending by request");
@@ -137,7 +143,6 @@ public class App
 	public static void write() {
 		try {
 			Class.forName("org.postgresql.Driver");
-			String connStr = "jdbc:postgresql://192.168.1.23:5432/osm";
 			try (final Connection connection = DriverManager.getConnection(connStr, "osm", "osm")) {
 				System.out.println("WRITE: Connected to postgres.");
 				final PreparedStatement preparedStatement = connection.prepareStatement(
@@ -176,9 +181,14 @@ public class App
 		}
 	}
 
+	private static Runtime runtime = Runtime.getRuntime();
+	private static final int mb = 1024*1024;
 	private static void writeReport() {
-		System.out.print(String.format("\rRead: %d, processed %d, written %d",
-				countRead.get(), countProcessed.get(), countWritten.get()));
+		
+		System.out.print(String.format("\rRead: %d, processed %d, written %d, max: %dMB, total: %dMB, free: %dMB, %.3f / %.3f",
+				countRead.get(), countProcessed.get(), countWritten.get(), 
+				runtime.maxMemory()/mb, runtime.totalMemory()/mb, runtime.freeMemory()/mb, 
+				100.0*runtime.freeMemory()/runtime.maxMemory(), 100.0*runtime.freeMemory() / runtime.totalMemory() ));
 	}
 
 	private static double[] readLatLongsFromGpxFile(File file) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
