@@ -144,6 +144,8 @@ public class App
 		try {
 			Class.forName("org.postgresql.Driver");
 			try (final Connection connection = DriverManager.getConnection(connStr, "osm", "osm")) {
+				connection.prepareStatement("create table if not exists steepness(osm_id bigint, maxpercentage double precision)").execute();
+				connection.prepareStatement("delete from steepness").execute();
 				System.out.println("WRITE: Connected to postgres.");
 				final PreparedStatement preparedStatement = connection.prepareStatement(
 						"insert into steepness(osm_id, maxpercentage) values(?,?)");
