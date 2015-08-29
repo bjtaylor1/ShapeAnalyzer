@@ -67,7 +67,7 @@ public class App
 		}
 	}
 
-	final static String connStr = "jdbc:postgresql://192.168.1.23:5432/" + System.getenv("OSMDB");
+	final static String connStr = System.getenv("OSMCONSTR");
 	public static void read() {
 		try {
 			Class.forName("org.postgresql.Driver");

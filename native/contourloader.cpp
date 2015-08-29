@@ -47,7 +47,10 @@ void contourloader::loadandprune(const coordset& coords, set<contour>& contours)
 
 void contourloader::loadcontours(const set<string>& files, set<contour>& contours) const
 {
-	fs::path baseDir("/home/ben/terraindata");
+	char* baseDirStr = getenv("DATADIR");
+	if(baseDirStr == NULL) throw hdsrvexception("DATADIR must be specified");
+
+	fs::path baseDir(baseDirStr);
 	if(args::verbose.getValue()) cout << "Got " << files.size() << " files" << endl;
 	for(set<string>::iterator i = files.begin(); i != files.end(); i++)
 	{
