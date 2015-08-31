@@ -67,10 +67,13 @@ public class App
 		}
 	}
 
-	final static String connStr = System.getenv("OSMCONSTR");
+	final static String connStrKey = "OSMCONSTR";
 	public static void read() {
 		try {
 			Class.forName("org.postgresql.Driver");
+			final String connStr = System.getenv(connStrKey);
+			if(connStr == null) throw new Exception("Must set environmnet variable " + connStrKey);
+	
 			try (final Connection connection = DriverManager.getConnection(connStr, "osm", "osm")) {
 				System.out.println("READ: Connected to postgres.");
 				final PGConnection pgConnection = (PGConnection) connection;
@@ -143,6 +146,8 @@ public class App
 	public static void write() {
 		try {
 			Class.forName("org.postgresql.Driver");
+			final String connStr = System.getenv(connStrKey);
+			if(connStr == null) throw new Exception("Must set environmnet variable " + connStrKey);
 			try (final Connection connection = DriverManager.getConnection(connStr, "osm", "osm")) {
 				connection.prepareStatement("create table if not exists steepness(osm_id bigint, maxpercentage double precision)").execute();
 				connection.prepareStatement("delete from steepness").execute();
